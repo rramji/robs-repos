@@ -1,0 +1,212 @@
+* NBOND.DC
+*
+*  (C) COPYRIGHT 1988,1989 MOLECULAR SIMULATIONS INC.
+*  ALL RIGHTS RESERVED
+*
+*  THIS COMMON BLOCK HOLDS INFORMATION ABOUT NBOND LISTS AND ENERGIES
+*
+* For each movable atom I, the program (NBLIST) generates a list of
+* all atoms J closer to I than CUTNB.  This list of J's is stored
+* in JNB and the total  number of J's up through atom I is stored
+* in INBLO(I). [If J is movable, then J.GT.I. to avoid double
+* counting.] Thus the J interactions with atom I are given by
+* JNB(IJ) where IJ=INBLO(I-1)+1 to INBLO(I).  [Thus INBLO(0)=0.]
+* Excluded from this JNB list are all IJ pairs involved in a normal
+* bond or angle interactions. This list of exclusions is stored in
+* INB as follows: For each movable I, all J involved in a bond or
+* angle interaction is listed in INB.   [If J is movable, then
+* J.GT.I.]  IBLO(I) is the index for the last J in INB
+* corresponding to I.  [Thus IBLO(0)=0.]
+*  __________________________________________________________________
+*
+*  NB ENERGIES BY ATOM
+*
+      real ZNBOEN   ! NB energy contribution by atom (van der Waals
+*                        plus Coulomb)
+      real ZELOEN   ! Electrostatic energy contribution by atom
+*                        (van der Waals plus Coulomb)
+*             VDWPR(500,000) and ELCPR(500,000) hold the
+*             energy of every possible vanderwaal's and electrostatic
+*             interaction for all the pairs. VDWPR(IJ) gives the energy
+*             for IJ interaction. (IJ values are explained below)
+*
+      real VDWPR(500000)     ! Vander waal's energy for each interaction pair.
+      real ELCPR(500000)     ! Electrostatic energy of each interaction pair.
+*
+*  CHOICE BETWEEN VARIOUS METHODS OF CUTTING OFF INTERACTIONS
+*
+      CHARACTER NBMETH*6,NBMETHX*6
+*
+*     NBMETH='SPLINE' - USUAL CUBIC SPLINE INTERPOLATION BETWEEN CTONNB
+*                       AND CTOFNB
+*     NBMETH='VECTOR' - Vectorised versions for spline interpolation,
+*                       LJ 6-12 potential and EPS=r*eps. Uses CTNBIN
+*                       to determine an inner sphere for which need not
+*                       worry about the switching function.
+*     NBMETH='ALL NB' - Vectorised version for special case of all NB
+*                       interactions, LJ 6-12 and EPS=r*eps. A real
+*                       memory hog, using about 4*natoms^2.
+*
+*     NBMETH='NOCUTF' - SUMS OVER ALL ATOMS, BUT USES NORMAL ROUTINES
+*
+*     NBMETHX='EWALD ' - EWALD CORRECTION FOR PERIODIC SYSTEMS
+*                       USES EWALDETA AND EWALDTOL
+*     NBMETHX='SPLINE' - USUAL CUBIC SPLINE INTERPOLATION BETWEEN CTONNB
+*                       AND CTOFNB
+*     NBMETHX='MINIMG' - MINIMUM IMAGE
+*
+* cutoff's
+*
+      real ctnbin   ! Inner sphere in which not worry about switching
+      real CTONNB   ! Starting value for nonbond switching function
+      real CTOFNB   ! Stopping value for nonbond switching function
+      real CUTNB    ! Cutoff value for nonbond list searching
+!wag 8/91 eliminated wmin from all use
+      real WMINDUM     ! Minimum value for nonbond interactions--below
+*                        WMINDUM warning messages are printed (1.65 A)
+*
+* COULOMB QUANTITIES
+*
+      real EPS      ! Dielectric constant
+      LOGICAL LREPS    ! TRUE => take dielectric constant as
+*                        R * epsilon (default = .TRUE.).  This speeds
+*                        up calculations.
+*
+* LIST OF NB INTERACTIONS
+*
+      integer INBLO  ! base index of JNB for atom "I" [INBLO(I) =
+*                        position in JNB of last J having a new bond
+*                        with atom I]
+      integer NNNB   ! total number of  NBONDS (JNB list) within
+*                        cutoff (CUTNB).
+czmc  dynamacally adjusted always > MXJNPA, initially = mxjnpa
+      integer NBALOC   ! total number of Non-bond allocated
+c
+!wag 5/91 MAXJNB IS OBSOLETE
+!      INTEGER MAXJNBDUM ! Maximum number of NBONDS (MXJNPA)
+      integer JNB(MXJNPA) ! sequential list of atoms (J) for every nonbond
+*                        interaction I-J
+      integer JNBNUM ! Maximum number of J's in the list for any one I
+*
+* LIST OF NB EXCLUSIONS
+*
+C IBLO(II) IS TOTAL NO. OF BOND AND ANGLE EXCLUSIONS UP THROUGH ATOM II
+*   NOTE:II IS SEQUENCE NUMBER FOR MOVATM, THE ABSOLUTE ATOM NUMBER IS
+*     I=MOVATM(II)
+*     II.LE.NMOVATM
+C INB(IJ) CONTAINS ORDERED LIST OF EXCLUDED JJ FOR EACH II
+*   NOTE:JJ IS SEQUENCE NUMBER FOR MOVATM, THE ABSOLUTE ATOM NUMBER IS
+*     I=MOVATM(JJ)
+*     JJ.LE.NTOTATM
+      integer IBLO   ! base index of INB for atom "I" [IBLO(I) =
+*                        position in INB of last J involving an
+*                        excluded interaction(bond or angle) with atom I
+      integer NNB    ! Total number of bond and angle restrictions
+*                        (INB list).
+!      INTEGER MAXNB  ! MAXimum number of NonBond exclusions (120,000)
+      INTEGER INB    ! sequential list of J's for all bonded
+*                        interactions with atom I
+*
+*  PERIODIC OPTION
+*
+      integer INBLOX   !BASE INDEX FOR JNBCEL LIST
+*                         INBLOX USED BOTH IN MOLXTL AND .NOT.MOLXTL
+c      INTEGER JNBCEL   !LIST OF CELLS WITH ATOM J WITHIN CUTNB OF
+      INTEGER JNBCEL(MXJNPA)   !LIST OF CELLS WITH ATOM J WITHIN CUTNB OF
+*                         ATOM I
+      INTEGER INBCEL   !LIST OF CELLS WITH ATOM J WITHIN CUTNB OF
+*                         ATOM I
+!      INTEGER   NNNBXTL  !NUMBER OF NB INTERACTIONS WITH EXTENDED CELLS
+      INTEGER NNNBFIX !number of MOLECULES with atoms within cutoff
+!      (CUTNB).
+*
+* MISC
+*
+      integer NCN    ! the pair index array THIS IS NO LONGER
+*                       NEEDED, IT CAN BE REPLACED WITH IJSYM
+!8/91 wag nboptdum is obsolete
+      integer NBOPTDUM  ! 1-> setup nonbond list by checking atoms
+*                        (BIOGRAF default). 4 ->setup nonbond list by
+*                        checking residues.--this is not supported
+      LOGICAL NBFIN    ! TRUE => NB list has been generated successfull
+      LOGICAL INCLH    ! TRUE => include hydrogen in non-bonding
+*                        interactions (default = .FALSE.)
+      LOGICAL NBUSR    !NBUSR = .TRUE. call unblist and uedrnb routines
+      LOGICAL WHOLRESDUM  !WHOLRESDUM = .TRUE. do not cut off residues at
+*                       rcut boundary
+*
+* Control parameters
+*
+      integer nrunct   !For 'VECTOR' method, the length of runs to look
+*                        for.
+      integer nnnbrn   !Number of runs of length NRUNCT found
+      integer nnnbsw   !Number of interactions in the switching region
+      integer mxrn     !Maximum number of runs allowed (dynamically set)
+      integer mxicrn   !Maximum nuber of interactions in runs ( "   ")
+      integer mxsw     !Maximum number of interactions in the switching
+c                        region (dynamically set)
+      logical lnblim   !TRUE if non-bond limits, etc changed
+      logical allnb    !True if ignoring cutoffs for interactions
+      logical nbused(4) !True if non-bond type I used in energy expres.
+*
+      common /nbond2/inb(mxnbpa)
+czmc  split JNB out of /NBOND/ to have better memory allignment
+      integer jnbadd !address of jnb
+      integer jnbceladd !address of jnb
+      COMMON /NBOND1/ jnbadd,jnbceladd,JNB,JNBCEL
+      COMMON /NBOND/ INBLO(0:MXATP2),IBLO(0:MXATP2),ZNBOEN(MXATPR),
+     3               CTONNB,CTOFNB,CUTNB,EPS,WMINDUM,
+     4               NNB,NCN,NNNB,NBOPTDUM,
+     5               NBFIN,INCLH,LREPS,JNBNUM,ctnbin,nrunct,
+     $               nnnbrn,nnnbsw,mxrn,mxicrn,mxsw,lnblim,allnb,nbused
+     $     ,NBALOC	
+*
+czmc  this two will be in memsys, address pass along through common
+c     dimension will be setup such to min (500000,ibig*(ibig-1)/2)
+c     in energy expression, address =0 indicate error in allocation
+c      COMMON /NBPRENR /VDWPR(MXJNPA),ELCPR(MXJNPA)
+c     address of two array, address goes first in common block
+      integer VDWADD,ELCADD
+      COMMON /NBPRENR /VDWADD,ELCADD,VDWPR(MXJNPA),ELCPR(MXJNPA)
+*
+      COMMON /NBONDEX/NNNBFIX,ZELOEN(MXATPR),INBLOX(0:MXATP2)
+c      common /nbonde2/jnbcel(MXJNPA),INBCEL(MXNBPA)
+      common /nbonde2/INBCEL(MXNBPA)
+      CHARACTER*9 NBUSRNAM
+      COMMON/NBONDCM/NBUSR,WHOLRESDUM,NBUSRNAM
+*
+      COMMON/NBONDCH/NBMETH,NBMETHX
+*
+      LOGICAL MINIMAG  !  FOR PERIODIC SYSTEMS, IF TRUE THEN DOES
+*                         NONBOND LIST ONLY WITH ATOMS WITHIN ONE
+*                         UNIT CELL FROM ATOM OF INTEREST--future use
+      LOGICAL WHOLEMOL ! use whole molecules for all nb interactions
+      LOGICAL LCOULOMB
+      common/nbondc2/MINIMAG,WHOLEMOL,LCOULOMB
+c
+czmc  this array will replace JNB,INBLO, JNBCEL, IBLO all together
+c      IJNB(1,I) and IJNB(2,I) will keep each NBOND interaction
+c       IJNB(3,I) will store first cell and last cell for each J
+c     in a packed form, that is 65536 * 65536 for 2**32
+c     where 65536 is biggest Cell number it can take
+c     so   IJNB(3,I) = (FIRSTCEL - 1) * 65536 + LASTCEL
+c     this method will avoid intermediate pointer movatm(i) within
+c     neighboring list
+czmc 2 tc,bdo,wag : this will not add much space but will allow
+c      new energy code to be developed. IJNB(4,1) or IJNB(5,1)
+c     may replace VDWPR,ELCPR, exclusion should be placed in
+c     memsys as well
+      integer IJNB(3,1),IJNBADD
+      common /newnbond/IJNBADD,IJNB
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
