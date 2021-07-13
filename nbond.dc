@@ -30,8 +30,8 @@
 *             interaction for all the pairs. VDWPR(IJ) gives the energy
 *             for IJ interaction. (IJ values are explained below)
 *
-      real VDWPR(500000)     ! Vander waal's energy for each interaction pair.
-      real ELCPR(500000)     ! Electrostatic energy of each interaction pair.
+      real VDWPR(MXJNPA)     ! Vander waal's energy for each interaction pair.
+      real ELCPR(MXJNPA)     ! Electrostatic energy of each interaction pair.
 *
 *  CHOICE BETWEEN VARIOUS METHODS OF CUTTING OFF INTERACTIONS
 *
@@ -167,7 +167,7 @@ c     in energy expression, address =0 indicate error in allocation
 c      COMMON /NBPRENR /VDWPR(MXJNPA),ELCPR(MXJNPA)
 c     address of two array, address goes first in common block
       integer VDWADD,ELCADD
-      COMMON /NBPRENR /VDWADD,ELCADD,VDWPR(MXJNPA),ELCPR(MXJNPA)
+      COMMON /NBPRENR /VDWADD,ELCADD,VDWPR,ELCPR
 *
       COMMON /NBONDEX/NNNBFIX,ZELOEN(MXATPR),INBLOX(0:MXATP2)
 c      common /nbonde2/jnbcel(MXJNPA),INBCEL(MXNBPA)
