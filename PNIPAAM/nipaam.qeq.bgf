@@ -1,0 +1,52 @@
+BIOGRF 200
+DESCRP nipaam
+REMARK ***** 21 SMALL GASTEIGER 
+REMARK BGF file created by mol2bgf
+REMARK nipaam.bgf modified RESNAME:NIP CHAIN:A
+REMARK nipaam.bgf modified RESNUM:1
+FORCEFIELD DREIDING
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5,f10.5)
+ATOM       1 C     NIP A     1  -0.34680   0.34570   0.99770 C_3    4 0 -0.11030
+ATOM       2 C     NIP A     1   0.39540  -0.38860   2.11560 C_3    4 0 -0.08837
+ATOM       3 H     NIP A     1  -1.43760   0.15220   1.08000 H_     1 0  0.06233
+ATOM       4 H     NIP A     1   0.00000   0.00000   0.00000 H_     1 0  0.14363
+ATOM       5 H     NIP A     1  -0.17860   1.44130   1.07820 H_     1 0  0.06961
+ATOM       6 C     NIP A     1   1.87070  -0.08720   2.03020 C_2    3 0 -0.00855
+ATOM       7 O     NIP A     1   2.51920  -0.40260   1.04440 O_2    1 2 -0.43394
+ATOM       8 N     NIP A     1   0.12310  -1.83340   2.00490 N_3    3 1 -0.36277
+ATOM       9 C     NIP A     1   0.26370  -2.60910   3.25200 C_3    4 0 -0.13724
+ATOM      10 C     NIP A     1   1.73290  -2.83190   3.64290 C_3    4 0 -0.13714
+ATOM      11 C     NIP A     1  -0.43160  -3.96080   3.06750 C_3    4 0 -0.14784
+ATOM      12 H     NIP A     1  -0.25660  -2.08380   4.08360 H_     1 0  0.12317
+ATOM      13 H     NIP A     1   2.28130  -3.35190   2.82860 H_     1 0  0.11046
+ATOM      14 H     NIP A     1   1.79060  -3.45050   4.56390 H_     1 0  0.04792
+ATOM      15 H     NIP A     1   2.23760  -1.87340   3.86880 H_     1 0  0.08711
+ATOM      16 H     NIP A     1   0.04760  -4.53950   2.24850 H_     1 0  0.07053
+ATOM      17 H     NIP A     1  -1.50150  -3.80340   2.81360 H_     1 0  0.09065
+ATOM      18 H     NIP A     1  -0.37990  -4.55530   4.00480 H_     1 0  0.05643
+ATOM      19 H     NIP A     1   2.36550   0.41700   2.85390 H_     1 0  0.19412
+ATOM      20 H     NIP A     1   0.62970  -2.27460   1.20050 H___A  1 0  0.25682
+ATOM      21 H     NIP A     1   0.00000   0.00000   3.08050 H_     1 0  0.11337
+FORMAT CONECT (a6,12i6)
+CONECT     1     2     3     4     5
+CONECT     2     1     6     8    21
+CONECT     3     1
+CONECT     4     1
+CONECT     5     1
+CONECT     6     2     7    19
+CONECT     7     6
+CONECT     8     2     9    20
+CONECT     9     8    10    11    12
+CONECT    10     9    13    14    15
+CONECT    11     9    16    17    18
+CONECT    12     9
+CONECT    13    10
+CONECT    14    10
+CONECT    15    10
+CONECT    16    11
+CONECT    17    11
+CONECT    18    11
+CONECT    19     6
+CONECT    20     8
+CONECT    21     2
+END
