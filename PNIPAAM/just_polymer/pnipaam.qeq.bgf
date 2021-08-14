@@ -8,6 +8,7 @@ REMARK polymer unit replicated by 15 in X direction
 REMARK polymer head definition '1 4'
 REMARK polymer tail definition '2 7'
 REMARK Created by rramji on Sat Aug 14 08:27:55 2021
+REMARK pnipaam.bgf modified CHARGE:-0.00007
 FORCEFIELD AMBER
 PERIOD 111
 AXES   ZYX
@@ -15,7 +16,7 @@ SGNAME P 1  1 1
 CRYSTX   439.91285  214.95250  208.44561   90.00000   90.00000   90.00000
 CELLS    -1    1   -1    1   -1    1
 FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5,f10.5)
-HETATM     1 H4    RES A   444  -3.10110  -2.76076  -6.12956 H_     1 0  0.04276
+HETATM     1 H4    RES A   444  -3.10110  -2.76076  -6.12956 H_     1 0  0.04269
 HETATM     2 C1    RES A   888  -4.06063  -2.34201  -5.82617 C_3    4 0 -0.17077
 HETATM     3 C2    RES A   888  -3.80536  -1.04434  -5.06774 C_3    4 0 -0.05629
 HETATM     4 H3    RES A   888  -4.57163  -3.10593  -5.24017 H_     1 0  0.07181

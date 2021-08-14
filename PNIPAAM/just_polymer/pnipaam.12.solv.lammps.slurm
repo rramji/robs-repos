@@ -23,7 +23,7 @@
 prefix=pnipaam.12.solv
 rtemp=298
 press=1
-curr_dir=$SLURM_SUBMIT_DIR
+curr_dir=/home/rramji/rob_dev/just_polymer
 temp_dir=/expanse/lustre/scratch/$USER/temp_project/md/lammps/${prefix}/${rtemp}K
 
 lmp_equil_file=in.${prefix}
